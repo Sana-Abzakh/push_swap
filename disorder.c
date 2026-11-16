@@ -20,25 +20,57 @@ unsigned int	ft_stacksize(t_stack *stack)
 	return (count);
 }
 
-double	disorder(t_stack)
+double	disorder(t_stack *s)
 {
-	size_t mis;
-	size_t pairs;
-	unsigned int ssize;
+	t_stack			*node;
+	size_t			mis;
+	size_t			pairs;
+	unsigned int	ssize;
 
-	ssize = ft_stacksize(t_stack);
+	ssize = ft_stacksize(s);
 	mis = 0;
-	pairs = 0;
 	pairs = ssize * (ssize - 1) / 2;
-	while (t_stack != NULL)
+	if (ssize < 2)
+		return (0.0);
+	while (s != NULL)
 	{
-		while (next->t_stack != NULL)
+		node = s->next;
+		while (node != NULL)
 		{
-			if ((t_stack->content) > (t_stack->next->content))
-			{
+			if ((s->content) > (node->content))
 				mis += 1;
-				t_stack = t_stack->next;
-			}
+			node = node->next;
 		}
+		s = s->next;
 	}
+	return ((double)mis / (double)pairs);
+}
+
+int	main(void)
+{
+	t_stack *stack = NULL;
+	t_stack *node1 = malloc(sizeof(t_stack));
+	t_stack *node2 = malloc(sizeof(t_stack));
+	t_stack *node3 = malloc(sizeof(t_stack));
+
+	node1->content = (void *)3;
+	node1->next = node2;
+
+	node2->content = (void *)1;
+	node2->next = node3;
+
+	node3->content = (void *)2;
+	node3->next = NULL;
+
+	stack = node1;
+
+	double result = disorder(stack);
+	printf("Disorder: %f\n", result);
+
+	// Free allocated memory
+	free(node1);
+	free(node2);
+	free(node3);
+
+	return (0);
 }
